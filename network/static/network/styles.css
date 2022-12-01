@@ -15,12 +15,16 @@ h1 {
 
 #new-post,
 .post {
-    height: 170px;
     width: 97%;
     margin: auto;
     border: 0.5px solid black;
     border-radius: 3px;
     padding: 15px;
+    margin-bottom: 15px;
+}
+
+#new-post {
+    height: 170px;
 }
 
 textarea {
@@ -33,4 +37,12 @@ textarea {
 
 .post-user {
     font-size: 18px;
+    color: black;
+    font-weight: 700;
+}
+
+.post-content {
+    margin-bottom: 5px;
+    max-height: 70px;
+    overflow: hidden;
 }

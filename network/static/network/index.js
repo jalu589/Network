@@ -27,4 +27,6 @@ function new_post() {
     .catch(error => {
         console.log('Error: ', error)
     });
+
+    window.location.reload()
 }

@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 def index(request):
     return render(request, "network/index.html", {
-        "posts": Post.objects.all()
+        "posts": Post.objects.all().order_by("-timestamp")
     })
 
 
