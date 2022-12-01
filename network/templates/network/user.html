@@ -6,7 +6,8 @@
 {% if user != username and user.is_authenticated %}
 <div class="user-follow">
     <h1 id="follow-name">{{username}}</h1>
-    <p id="follow-count">{{ followers|length }} follower{% if followers|length != 1%}s{%endif%}</p>
+    <p id="follow-count">{{ followers|length }} Follower{% if followers|length != 1%}s{%endif%}</p>
+    <p id="follow-count">Following {{username.following.all|length}}</p>
     <button id="follow-button" class="btn btn-primary" value={{username}}>
         {% if user in followers %}
         Unfollow
@@ -16,8 +17,11 @@
     </button>
 </div>
 {% else %}
-<h1>{{username}}</h1>
-<p>{{ followers|length }}</p>
+<div class="user-follow">
+    <h1 id="follow-name">{{username}}</h1>
+    <p id="follow-count">{{ followers|length }} Follower{% if followers|length != 1%}s{%endif%}</p>
+    <p id="follow-count">Following {{username.following.all|length}}</p>
+</div>
 {% endif %}
 
 {% if user == username %}

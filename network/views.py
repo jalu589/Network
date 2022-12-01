@@ -15,6 +15,24 @@ def index(request):
     })
 
 
+@login_required
+def following(request):
+    user = request.user
+
+    # Get the people the current user is following
+    follows = Follow.objects.filter(follower=user)
+    following_posts = []
+    for follow in follows:
+        # Get the posts of the people
+        posts = Post.objects.filter(poster=follow.followee)
+        for post in posts:
+            following_posts.append(post.serialize())
+    
+    return render(request, "network/following.html", {
+        "posts": sorted(following_posts, key=lambda post: post['timestamp'], reverse=True)
+    })
+
+
 @csrf_exempt
 @login_required
 def newpost(request):
