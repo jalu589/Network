@@ -2,17 +2,16 @@
 {% load static %}
 
 {% block body %}
-<h1>All Posts</h1>
+<h1>{{username}}</h1>
 
-{% if user.is_authenticated %}
+{% if user == username %}
     <div id="new-post">
         <h5>New Post</h5>
         <textarea name="post-content" id="post-content" rows="3"></textarea>
         <button id="post-button" class="btn btn-primary">Post</button>
     </div>
 {% endif %}
-    
-    
+
 {% for post in posts %}
 <div class="post">
     
@@ -22,9 +21,5 @@
     <p>{{post.like_count}}</p>
 </div>
 {% endfor %}
-    
-{% endblock %}
 
-{% block script %}
-    <script src="{% static 'network/index.js' %}"></script>
 {% endblock %}

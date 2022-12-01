@@ -36,6 +36,21 @@ def newpost(request):
     return JsonResponse({"message": "Email sent successfully."}, status=201)
 
 
+def user(request, user_id):
+    try:
+        user = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        return JsonResponse({"error": "User not found."}, status=404)
+    
+    posts = Post.objects.filter(poster=user)
+    
+    return render(request, "network/user.html", {
+        "username": user,
+        "posts": posts
+    })
+
+
+
 def login_view(request):
     if request.method == "POST":
 
