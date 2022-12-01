@@ -7,11 +7,18 @@ from .models import User, Post, Follow
 import json
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
+from django.core.paginator import Paginator
 
 
 def index(request):
+    posts = Post.objects.all().order_by("-timestamp")
+    paginator = Paginator(posts, 10)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
     return render(request, "network/index.html", {
-        "posts": Post.objects.all().order_by("-timestamp")
+        "posts": page_obj
     })
 
 
@@ -28,8 +35,14 @@ def following(request):
         for post in posts:
             following_posts.append(post.serialize())
     
+    # Send 10 posts at a time
+    following_posts = sorted(following_posts, key=lambda post: post['timestamp'], reverse=True)
+    paginator = Paginator(following_posts, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     return render(request, "network/following.html", {
-        "posts": sorted(following_posts, key=lambda post: post['timestamp'], reverse=True)
+        "posts": page_obj
     })
 
 
@@ -41,17 +54,17 @@ def newpost(request):
         return JsonResponse({"error": "POST request required."}, status=400)
     
     user = request.user
-    print(user)
+    # get content from fetch post request
     data = json.loads(request.body)
     content = data.get("content", "")
-    print(content)
+    # create and save post object
     obj = Post.objects.create(
         content = content,
         poster = user,
         like_count = 0
     )
     obj.save()
-    return JsonResponse({"message": "Email sent successfully."}, status=201)
+    return JsonResponse({"message": "Successfully posted."}, status=201)
 
 
 def user(request, user_id):
@@ -60,7 +73,13 @@ def user(request, user_id):
     except User.DoesNotExist:
         return JsonResponse({"error": "User not found."}, status=404)
     
-    posts = Post.objects.filter(poster=user)
+    # Get posts of user 10 at a time
+    posts = Post.objects.filter(poster=user).order_by("-timestamp")
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    # Get followers of user
     follows = Follow.objects.filter(followee=user_id)
     followers = []
     for follow in follows:
@@ -68,7 +87,7 @@ def user(request, user_id):
     
     return render(request, "network/user.html", {
         "username": user,
-        "posts": posts,
+        "posts": page_obj,
         "followers": followers
     })
 
