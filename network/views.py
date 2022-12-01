@@ -43,12 +43,48 @@ def user(request, user_id):
         return JsonResponse({"error": "User not found."}, status=404)
     
     posts = Post.objects.filter(poster=user)
+    follows = Follow.objects.filter(followee=user_id)
+    followers = []
+    for follow in follows:
+        followers.append(follow.follower)
     
     return render(request, "network/user.html", {
         "username": user,
-        "posts": posts
+        "posts": posts,
+        "followers": followers
     })
 
+
+@csrf_exempt
+@login_required
+def follow(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "POST request required."}, status=400)
+    
+    user = request.user
+    #get post info from fetch request
+    data = json.loads(request.body)
+    name = data.get("followee", "")
+    try:
+        followee = User.objects.get(username=name)
+    except User.DoesNotExist:
+        return JsonResponse({"error": "User not found."}, status=404)
+
+    try:
+        # If follow already exists this will unfollow
+        follow = Follow.objects.get(follower=user, followee=followee)
+        print('unfollowing')
+        follow.delete()
+        return JsonResponse({"message": "Unfollowed."}, status=201)
+    except Follow.DoesNotExist:
+        print('following')
+        # otherwise will create new follow
+        obj = Follow.objects.create(
+            follower = user,
+            followee = followee
+        )
+        obj.save()
+        return JsonResponse({"message": "Followed."}, status=201)
 
 
 def login_view(request):

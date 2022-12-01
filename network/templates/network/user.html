@@ -2,13 +2,29 @@
 {% load static %}
 
 {% block body %}
+
+{% if user != username and user.is_authenticated %}
+<div class="user-follow">
+    <h1 id="follow-name">{{username}}</h1>
+    <p id="follow-count">{{ followers|length }} follower{% if followers|length != 1%}s{%endif%}</p>
+    <button id="follow-button" class="btn btn-primary" value={{username}}>
+        {% if user in followers %}
+        Unfollow
+        {% else %}
+        Follow
+        {% endif %}
+    </button>
+</div>
+{% else %}
 <h1>{{username}}</h1>
+<p>{{ followers|length }}</p>
+{% endif %}
 
 {% if user == username %}
     <div id="new-post">
         <h5>New Post</h5>
         <textarea name="post-content" id="post-content" rows="3"></textarea>
-        <button id="post-button" class="btn btn-primary">Post</button>
+        <button id="post-button" class="btn btn-primary" value={{username}}>Post</button>
     </div>
 {% endif %}
 
@@ -22,4 +38,8 @@
 </div>
 {% endfor %}
 
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/user.js' %}"></script>
 {% endblock %}

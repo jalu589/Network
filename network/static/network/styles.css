@@ -47,3 +47,24 @@ textarea {
     max-height: 70px;
     overflow: hidden;
 }
+
+.user-follow {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 20px;
+}
+
+#follow-button {
+    font-size: 14px;
+    padding: 2px 5px;
+}
+
+#follow-name {
+    margin-bottom: 0px;
+    margin-right: 20px;
+}
+
+
+#follow-count {
+    margin-right: 20px;
+}

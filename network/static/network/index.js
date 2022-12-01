@@ -6,11 +6,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 function new_post() {
-    console.log('clicked')
-
     // Get post content
     const postContent = document.querySelector('textarea').value
-    console.log(postContent)
     document.querySelector('textarea').value = ''
 
     // Convert content into json and POST to api
@@ -28,5 +25,6 @@ function new_post() {
         console.log('Error: ', error)
     });
 
+    // Refresh page to load new post
     window.location.reload()
 }
