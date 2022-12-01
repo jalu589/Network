@@ -1,14 +1,39 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
-
-from .models import User
+from .models import User, Post, Follow
+import json
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 
 
 def index(request):
-    return render(request, "network/index.html")
+    return render(request, "network/index.html", {
+        "posts": Post.objects.all()
+    })
+
+
+@csrf_exempt
+@login_required
+def newpost(request):
+    print('post incoming')
+    if request.method != "POST":
+        return JsonResponse({"error": "POST request required."}, status=400)
+    
+    user = request.user
+    print(user)
+    data = json.loads(request.body)
+    content = data.get("content", "")
+    print(content)
+    obj = Post.objects.create(
+        content = content,
+        poster = user,
+        like_count = 0
+    )
+    obj.save()
+    return JsonResponse({"message": "Email sent successfully."}, status=201)
 
 
 def login_view(request):

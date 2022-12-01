@@ -1,0 +1,36 @@
+body {
+    margin: 0;
+    padding: 0;
+    /* background-color: green; */
+}
+
+p {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+h1 {
+    margin-left: 15px;
+}
+
+#new-post,
+.post {
+    height: 170px;
+    width: 97%;
+    margin: auto;
+    border: 0.5px solid black;
+    border-radius: 3px;
+    padding: 15px;
+}
+
+textarea {
+    width: 100%;
+}
+
+#post-button {
+    padding: 4px 12px;
+}
+
+.post-user {
+    font-size: 18px;
+}

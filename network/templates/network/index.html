@@ -2,5 +2,26 @@
 {% load static %}
 
 {% block body %}
-    TODO
+<h1>All Posts</h1>
+
+{% if user.is_authenticated %}
+    <div id="new-post">
+        <h5>New Post</h5>
+        <textarea name="post-content" id="post-content" rows="3"></textarea>
+        <button id="post-button" class="btn btn-primary">Post</button>
+    </div>
+{% endif %}
+    
+    <div class="post">
+        {% for post in posts %}
+            <a class="post-user" href="">{{post.poster}}</a>
+            {{post.content}}
+            {{post.timestamp}}
+            {{post.like_count}}
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/index.js' %}"></script>
 {% endblock %}
