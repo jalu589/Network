@@ -1,8 +1,42 @@
 document.addEventListener('DOMContentLoaded', function() {
 
     document.querySelector('#post-button').addEventListener('click', () => new_post());
-
 });
+
+
+function edit_post(post) {
+    console.log('editing', post)
+    // show and hide text of selected post
+    const postContent = document.querySelector(`#content-${post}`)
+    postContent.style.display = 'none'
+    const editText = document.querySelector(`#edit-${post}`)
+    editText.style.display = 'block'
+    document.querySelector(`#edit-button-${post}`).style.display = 'none'
+    document.querySelector(`#save-button-${post}`).style.display = 'block'
+}
+
+
+function save_post(post) {
+    console.log('saving', post)
+    const editText = document.querySelector(`#edit-${post}`)
+    // PUT updated content to api
+    fetch(`/edit/${post}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+            content: editText.value
+        })
+    })
+    .catch(error => {
+        console.log('Error: ', error)
+    });
+    // Update post content in page using text area value
+    const postContent = document.querySelector(`#content-${post}`)
+    postContent.textContent = editText.value
+    editText.style.display = 'none'
+    postContent.style.display = 'block'
+    document.querySelector(`#edit-button-${post}`).style.display = 'block'
+    document.querySelector(`#save-button-${post}`).style.display = 'none'
+}
 
 
 function new_post() {
@@ -26,5 +60,5 @@ function new_post() {
     });
 
     // Refresh page to load new post
-    window.location.reload()
+    location.reload()
 }

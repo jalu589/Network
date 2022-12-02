@@ -22,6 +22,49 @@ def index(request):
     })
 
 
+@csrf_exempt
+@login_required
+def like(request, post_id):
+    print('like')
+    # Check for valid request, post, and user
+    if request.method != "PUT":
+        return JsonResponse({
+            "error": "PUT request required."
+        }, status=400)
+    
+    try:
+        post = Post.objects.get(pk=post_id)
+    except Post.DoesNotExist:
+        return JsonResponse({"error": "Post not found."}, status=404)
+
+
+@csrf_exempt
+@login_required
+def edit(request, post_id):
+    print('editing')
+    # Check for valid request, post, and user
+    if request.method != "PUT":
+        return JsonResponse({
+            "error": "PUT request required."
+        }, status=400)
+    
+    try:
+        post = Post.objects.get(pk=post_id)
+    except Post.DoesNotExist:
+        return JsonResponse({"error": "Post not found."}, status=404)
+    
+    if request.user != post.poster:
+        return JsonResponse({
+            "error": "Cannot edit this post."
+        }, status=400)
+    
+    # if all checks pass save new post content
+    data = json.loads(request.body)
+    post.content = data['content']
+    post.save()
+    return HttpResponse(status=204)
+
+
 @login_required
 def following(request):
     user = request.user

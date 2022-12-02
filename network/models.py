@@ -21,6 +21,7 @@ class Post(models.Model):
             "id": self.id,
             "poster": self.poster,
             "content": self.content,
+            "like_count": self.like_count,
             "timestamp": self.timestamp,
             "likers": self.likers
         }
