@@ -39,8 +39,10 @@
     <textarea class="edit-text" id="edit-{{post.id}}">{{post.content}}</textarea>
     <p class="timestamp">{{post.timestamp}}</p>
     <div class="post-bottom">
-        <p>{{post.like_count}}</p>
-        <button class="like-button">&#9825; &#10084;</button>
+        <p>{{post.like_count}} Like{% if post.like_count != 1%}s{% endif %}</p>
+        {% if user.is_authenticated %}
+            <button class="like-button" id="like-button-{{post.id}}" onclick="like_post({{post.id}})">{% if post in user.liked.all %}&#10084;{% else %}&#9825;{% endif %}</button>
+        {% endif %}
         {% if user == post.poster%}
             <button class="btn btn-primary edit-button" id="edit-button-{{post.id}}" onclick="edit_post({{post.id}})">Edit</button>
             <button class="btn btn-primary save-button" id="save-button-{{post.id}}" onclick="save_post({{post.id}})">Save</button>

@@ -25,7 +25,12 @@ def index(request):
 @csrf_exempt
 @login_required
 def like(request, post_id):
-    print('like')
+    print('liked by', request.user)
+    try:
+        liker = User.objects.get(pk=request.user.id)
+    except User.DoesNotExist:
+        return JsonResponse({"error": "User not found."}, status=404)
+    
     # Check for valid request, post, and user
     if request.method != "PUT":
         return JsonResponse({
@@ -36,6 +41,17 @@ def like(request, post_id):
         post = Post.objects.get(pk=post_id)
     except Post.DoesNotExist:
         return JsonResponse({"error": "Post not found."}, status=404)
+    
+    if request.user in post.likers.all():
+        post.likers.remove(liker)
+        post.like_count -= 1
+        post.save()
+    else:
+        post.likers.add(liker)
+        post.like_count += 1
+        post.save()
+
+    return HttpResponse(status=204)
 
 
 @csrf_exempt
