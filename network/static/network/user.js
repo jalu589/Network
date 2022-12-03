@@ -16,6 +16,19 @@ function edit_post(post) {
 }
 
 
+function like_post(post) {
+    console.log(post, 'liked')
+    const likeButton = document.querySelector(`#like-button-${post}`)
+    fetch(`/like/${post}`, {
+        method: 'PUT'
+    })
+    .catch(error => {
+        console.log('Error: ', error)
+    });
+    location.reload()
+}
+
+
 function save_post(post) {
     console.log('saving', post)
     const editText = document.querySelector(`#edit-${post}`)
