@@ -5,11 +5,21 @@
 <h1>Following</h1>
 
 {% for post in posts %}
-<div class="post">
+<div class="post" id="post-{{post.id}}">
     <a class="post-user" href="{% url 'user' post.poster.id %}">{{post.poster}}</a>
-    <p class="post-content">{{post.content}}</p>
+    <p id="content-{{post.id}}" class="post-content">{{post.content}}</p>
+    <textarea class="edit-text" id="edit-{{post.id}}">{{post.content}}</textarea>
     <p class="timestamp">{{post.timestamp}}</p>
-    <p>{{post.like_count}}</p>
+    <div class="post-bottom">
+        <p>{{post.like_count}} Like{% if post.like_count != 1 %}s{% endif %}</p>
+        {% if user.is_authenticated %}
+            <button class="like-button" id="like-button-{{post.id}}" onclick="like_post({{post.id}})">{% if post in user.liked.all %}&#10084;{% else %}&#9825;{% endif %}</button>
+        {% endif %}
+        {% if user == post.poster %}
+            <button class="btn btn-primary edit-button" id="edit-button-{{post.id}}" onclick="edit_post({{post.id}})">Edit</button>
+            <button class="btn btn-primary save-button" id="save-button-{{post.id}}" onclick="save_post({{post.id}})">Save</button>
+        {% endif %}
+    </div>
 </div>
 {% endfor %}
 
@@ -31,4 +41,8 @@
     </span>
 </div>
     
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/follower.js' %}"></script>
 {% endblock %}

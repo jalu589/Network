@@ -92,10 +92,10 @@ def following(request):
         # Get the posts of the people
         posts = Post.objects.filter(poster=follow.followee)
         for post in posts:
-            following_posts.append(post.serialize())
+            following_posts.append(post)
     
     # Send 10 posts at a time
-    following_posts = sorted(following_posts, key=lambda post: post['timestamp'], reverse=True)
+    following_posts = sorted(following_posts, key=lambda post: post.timestamp, reverse=True)
     paginator = Paginator(following_posts, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
